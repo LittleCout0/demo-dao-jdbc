@@ -36,35 +36,42 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public Seller findById(Integer id) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
 
         try {
-            ps = conn.prepareStatement("SELECT seller.*, department.Name as DepName "
+            preparedStatement = conn.prepareStatement("SELECT seller.*, department.Name as DepName "
                     + "FROM seller INNER JOIN department "
                     + "ON seller.DepartmentId = department.Id "
                     + "WHERE seller.Id = ?");
 
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
 
-            if (rs.next()) {
-                Department dep = new Department(rs.getInt("DepartmentId"), rs.getString("DepName"));
-                return new Seller(
-                        rs.getInt("Id"),
-                        rs.getString("Name"),
-                        rs.getString("Email"),
-                        rs.getDouble("BaseSalary"),
-                        rs.getDate("BirthDate").toLocalDate(),
-                        dep);
+            if (resultSet.next()) {
+                return instantiateSeller(resultSet, instantiateDepartment(resultSet));
             }
             return null;
         } catch (SQLException e) {
             throw new DBException(e.getMessage());
         } finally {
-            DB.closeStatement(ps);
-            DB.closeResultSet(rs);
+            DB.closeStatement(preparedStatement);
+            DB.closeResultSet(resultSet);
         }
+    }
+
+    private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException {
+        return new Seller(
+                rs.getInt("Id"),
+                rs.getString("Name"),
+                rs.getString("Email"),
+                rs.getDouble("BaseSalary"),
+                rs.getDate("BirthDate").toLocalDate(),
+                dep);
+    }
+
+    private Department instantiateDepartment(ResultSet rs) throws SQLException {
+        return new Department(rs.getInt("DepartmentId"), rs.getString("DepName"));
     }
 
     @Override
