@@ -5,11 +5,14 @@ import entities.Seller;
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Program {
     public static void main(String[] args) {
         int repeatCount = 30;
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         System.out.println("=".repeat(repeatCount) + "TEST 1: seller findById" + "=".repeat(repeatCount));
         SellerDao sellerDaoTest1 = DaoFactory.createSellerDao();
@@ -28,5 +31,11 @@ public class Program {
         sellersTest3.forEach(System.out::println);
         System.out.println("Instances Department: " + Department.getNumOfInstances());
 
+        System.out.println("=".repeat(repeatCount) + "TEST 4: seller insert" + "=".repeat(repeatCount));
+        SellerDao sellerDaoTest4 = DaoFactory.createSellerDao();
+        Seller seller4 = new Seller(null, "Greg", "greg@gmail.com", 4000.0,
+                LocalDate.parse("01/03/1990", dtf), new Department(2, "Electronics"));
+        sellerDaoTest4.insert(seller4);
+        System.out.println("Inserted! New id = " + seller4.getId());
     }
 }
