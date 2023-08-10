@@ -6,16 +6,10 @@ import java.util.Objects;
 public class Department implements Serializable {
     private Integer id;
     private String name;
-    private static int counter;
 
-    public Department(int id, String name) {
+    public Department(Integer id, String name) {
         this.id = id;
         this.name = name;
-        counter++;
-    }
-
-    public static int getNumOfInstances(){
-        return counter;
     }
 
     public Integer getId() {
