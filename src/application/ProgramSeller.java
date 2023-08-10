@@ -1,5 +1,6 @@
 package application;
 
+import db.DB;
 import entities.Department;
 import entities.Seller;
 import model.dao.DaoFactory;
@@ -9,10 +10,9 @@ import utils.Util;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
-public class Program {
+
+public class ProgramSeller {
     public static void main(String[] args) {
         int repeatCount = 30;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -66,5 +66,6 @@ public class Program {
         System.out.println("Seller " + sellerLastAdded.getName() + " deleted! Id = " + sellerLastAdded.getId());
         System.out.println();
 
+        DB.closeConnection();
     }
 }
